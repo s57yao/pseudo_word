@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>pseudo-word pronunciation</title>
+    <script src="https://unpkg.com/jspsych@8.2.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-initialize-microphone@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-audio-response@2.1.1"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-audio-button-response@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@2.1.0"></script>
+    <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" /> 
+  </head>
+  <body>
+  </body>
+  <script>
+    fetch("/static/wordlist_new.csv")
+    .then(response => response.text())
+    .then(text => {
+      let rows = text.trim().split("\n");
+      let words = rows.map(row => row.split(",")[0]);
+      let my_stimuli = words.map(w => ({ word: w }));
+      console.log(my_stimuli);
+
+    var jsPsych = initJsPsych({
+        on_finish: function(){
+            // jsPsych.data.displayData();
+            const dataJSON = jsPsych.data.get().json();
+            fetch('/save-data', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: dataJSON
+            })
+            .then(() => fetch("/finish"))
+            .then(res => res.json())
+            .then(data => {window.location.href = data.url});
+           }
+          }
+            );
+            
+    var timeline = [];
+
+    var welcome = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: ['t'],
+        stimulus: 'Welcome! <br><br> ' + 
+        'I believe you will need to read some English "words" today. <br><br> ' + 
+        'So, let\'s choose the microphone first. <br><br>' + 
+        'Press t on the keyboard to continue',
+    };
+    timeline.push(welcome);
+
+    var mic_init = {
+    type: jsPsychInitializeMicrophone,
+    };
+    timeline.push(mic_init);
+
+    var instructions1 = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: ['q'],
+        stimulus: 'Now you\'ve choosen the mic, it\'s time for some background. <br><br>'+
+        'A pseudo-word is one that looks like English but is actually non-existent. <br><br>' +
+        'For example, "foct". <br><br>' + 
+        'In the experiment, you see a list of pseudo-words (like "foct") one by one. <br><br>' +
+        'Try to pronunce each one as if this was an English word. <br><br>' +
+        'Your response will be audio-recorded. <br><br>' +
+        'There is NO correct answer. Just give your best guess. <br><br>' +
+        'If we are cool so far, press q to continute',
+    };
+    timeline.push(instructions1);
+
+    var instructions2 = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: ['c'],
+        stimulus: 'But there is one requirement. <br><br>' +
+        'Please read the pseudo-word in a <b>down tone</b>, not an up tone. <br><br>' +
+        'Well, what do I mean? Press c to hear the examples. <br><br>',
+    };
+    timeline.push(instructions2);
+    
+    var up_example = {
+    type: jsPsychAudioButtonResponse,
+    stimulus: '/static/up_foct.wav',
+    choices: ['I get it.'],
+    enable_button_after: 1,
+    prompt: "<p>This is 'foct' in an up tone. Like you are uncertain. DON'T do this!</p>"
+    };
+    var down_example = {
+    type: jsPsychAudioButtonResponse,
+    stimulus: '/static/down_foct.wav',
+    choices: ['I get it.'],
+    enable_button_after: 1,
+    prompt: "<p>This is 'foct' in a <b>down tone</b>. Like you are an English teacher. PLEASE DO this!</p>"
+    };
+    timeline.push(up_example);
+    timeline.push(down_example);
+
+    var test_mic = {
+    type: jsPsychHtmlAudioResponse,
+    stimulus: 'Now your turn. The mic is already turned on ...<br><br>' +
+    'Please 1. try to pronounce the pseudo-word "erebant" in a <b>down tone</b> <br><br>' +
+    'and 2. click on the button when you are done. <br><br>' +
+    'You can play and hear your voice on the next page. <br><br>',
+    recording_duration: null,
+    allow_playback: true,
+    done_button_label: 'Recording is done.',
+    record_again_button_label: 'Something\'s not right. Record again.',
+    accept_button_label: 'I hear my voice in a <b>down tone</b>. Let\'s move on!',
+    // on_finish: function(data){
+    //     fetch('/save-data.php', { audio_base64: data.response })
+    //         .then((audio_id) => {
+    //             data.response = audio_id;
+    //         });
+    //   }
+    };
+    timeline.push(test_mic)
+
+    var sample_intro = {
+    type: jsPsychHtmlKeyboardResponse,
+    choices: ['x'],
+    stimulus: 'Perfect! So your mic is working and you well understand a <b>down tone</b>! <br><br>' +
+    'Note that for each pseudo-word, you can reason for a while before pronouncing it. <br><br>' +
+    'Also, you always can change your mind by recording again - <br><br>' +
+    'as many times as you like. <br><br>' +
+    'You are also suggested to listen to your recording to double check. <br><br>' +
+    'Let\'s try one last example. Remember the mic is already on when you see the pseudo-word. <br><br>' +
+    'Press x to move on.  <br><br>',
+    };
+    timeline.push(sample_intro)
+
+    var sample = {
+       type: jsPsychHtmlAudioResponse,
+      stimulus: 'skanum',
+      recording_duration: null,
+      save_audio_url: true,
+      done_button_label: "Recording is Done. Go and listen.",
+      allow_playback: true,
+      record_again_button_label: "Well, I've changed my mind. I want to record again.",
+      accept_button_label: "Next word!",
+    }
+    timeline.push(sample)
+
+    var test_procedure_intro = {
+    type: jsPsychHtmlKeyboardResponse,
+    choices: ['y'],
+    stimulus: 'Now we shall really begin. <br><br>' +
+    'Some words you encounter can be real, existing English words. <br><br>' +
+    'Just read them as they are. <br><br>' +
+    'Remember to always use a <b>down tone</b>. <br><br>' +
+    'If you are all good, press y to start the experiment.  <br><br>',
+    };
+    timeline.push(test_procedure_intro)
+
+    var toy_stimuli = [
+      {word: `<p style="font-size:48px; color:blue;">norps</p>`},
+      {word: `<p style="font-size:48px; color:blue;">istamb</p>`},
+      {word: `<p style="font-size:48px; color:blue;">tighoma</p>`},
+    ];
+    var trial_template = {
+      type: jsPsychHtmlAudioResponse,
+      stimulus: jsPsych.timelineVariable('word'),
+      recording_duration: null,
+      save_audio_url: true,
+      done_button_label: "Done.",
+      allow_playback: true,
+      record_again_button_label: "Well, I've changed my mind. I want to record again.",
+      accept_button_label: "Next word!",
+    };
+    var test_procedure = {
+        timeline: [trial_template],
+        timeline_variables: my_stimuli,
+        randomize_order: true,
+    };
+    
+    timeline.push(test_procedure);
+    
+
+    var end = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: 'End of Experiment. Thank you for participating!',
+    };
+    timeline.push(end);
+
+
+    jsPsych.run(timeline); 
+        });
+  </script>
+</html>
