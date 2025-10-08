@@ -64,9 +64,9 @@ def finish():
     avg_rt = sum(rt_list)/len(rt_list) if rt_list else 0
     sd_rt = np.std(rt_list) if rt_list else 0
     if avg_rt >= 1000 and sd_rt >= 10:  
-        url = "https://app.prolific.com/submissions/complete?cc=CP800GLL"  
+        url = "https://app.prolific.com/submissions/complete?cc=C11W147H"  
     else:
-        url = "https://app.prolific.com/submissions/complete?cc=C1OAGGQ8"
+        url = "https://app.prolific.com/submissions/complete?cc=C1FBX2H7"
     return jsonify({"url": url})
 
 if __name__ == '__main__':
