@@ -4,6 +4,8 @@ import io, base64
 import numpy as np
 import uuid, shortuuid
 import re
+from gevent.pywsgi import WSGIServer   
+import argparse
 
 app = Flask(__name__)
 
@@ -66,6 +68,22 @@ def finish():
     return jsonify({"url": url})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=False, port=8002)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', type=int, default=8002)
+    parser.add_argument('--key-path', type=str, default=None)  
+    parser.add_argument('--cert-path', type=str, default=None)  
+    args = parser.parse_args()
 
-    
+    if args.key_path and args.cert_path:
+        http_server = WSGIServer(
+            ('0.0.0.0', args.port),
+            app,
+            keyfile=args.key_path,
+            certfile=args.cert_path
+        )
+    else:
+        from gevent.pywsgi import WSGIServer
+        http_server = WSGIServer(('0.0.0.0', args.port), app)
+
+    print(f"Serving on port {args.port}...")
+    http_server.serve_forever()
