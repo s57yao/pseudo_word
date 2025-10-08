@@ -20,7 +20,23 @@
     .then(text => {
       let rows = text.trim().split("\n");
       let words = rows.map(row => row.split(",")[0]);
-      let my_stimuli = words.map(w => ({ word: w }));
+      let full_stimuli = words.map(w => ({ word: w }));
+
+      for (let i = full_stimuli.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [full_stimuli[i], full_stimuli[j]] = [full_stimuli[j], full_stimuli[i]];
+      }
+      let random_stimuli = full_stimuli.slice(0,48);
+
+      let elicit_stimuli = ["please", "great","bath","shop","slip","pants",
+                            "rat","pinch","such","mouth", "neck", "no"].map(w => ({word: w}));
+      
+      let total_stimuli = [...random_stimuli, ...elicit_stimuli];
+      for (let i = total_stimuli.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [total_stimuli[i], total_stimuli[j]] = [total_stimuli[j], total_stimuli[i]];
+      }
+      let my_stimuli = total_stimuli;
       console.log(my_stimuli);
 
     var jsPsych = initJsPsych({

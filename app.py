@@ -8,6 +8,7 @@ import re
 app = Flask(__name__)
 
 @app.route('/experiment')
+@app.route('/experiment/<path:path>')
 def index():
     return render_template('index.html')
 
@@ -66,3 +67,5 @@ def finish():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=False, port=8002)
+
+    
