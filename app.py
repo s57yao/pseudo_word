@@ -36,7 +36,7 @@ def save_data():
     with open(filename, 'a', encoding='utf-8') as f:
         f.write(json.dumps(record) + '\n')
 
-    audio_trials = [t for t in trials[-4:-1] if 'response' in t and t['response']]
+    audio_trials = [t for t in trials[-60:-1] if 'response' in t and t['response']]
     if audio_trials:
         os.makedirs('data/audio', exist_ok=True)
 
