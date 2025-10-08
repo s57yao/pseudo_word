@@ -6,8 +6,10 @@ import uuid, shortuuid
 import re
 from gevent.pywsgi import WSGIServer   
 import argparse
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/experiment', defaults={'path': ''})
 @app.route('/experiment/<path:path>')

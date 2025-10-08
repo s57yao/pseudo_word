@@ -43,12 +43,12 @@
         on_finish: function(){
             // jsPsych.data.displayData();
             const dataJSON = jsPsych.data.get().json();
-            fetch('/save-data', {
+            fetch('https://compling-wat.com:8002/save-data', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: dataJSON
             })
-            .then(() => fetch("/finish"))
+            .then(() => fetch("https://compling-wat.com:8002/finish"))
             .then(res => res.json())
             .then(data => {window.location.href = data.url});
            }
@@ -75,14 +75,14 @@
     var instructions1 = {
         type: jsPsychHtmlKeyboardResponse,
         choices: ['q'],
-        stimulus: 'Now you\'ve choosen the mic, it\'s time for some background. <br><br>'+
+        stimulus: 'Now you\'ve chosen the mic, it\'s time for some background. <br><br>'+
         'A pseudo-word is one that looks like English but is actually non-existent. <br><br>' +
         'For example, "foct". <br><br>' + 
         'In the experiment, you see a list of pseudo-words (like "foct") one by one. <br><br>' +
-        'Try to pronunce each one as if this was an English word. <br><br>' +
+        'Try to pronounce each one as if this was an English word. <br><br>' +
         'Your response will be audio-recorded. <br><br>' +
         'There is NO correct answer. Just give your best guess. <br><br>' +
-        'If we are cool so far, press q to continute',
+        'If we are cool so far, press q to continue',
     };
     timeline.push(instructions1);
 
