@@ -7,9 +7,9 @@ import re
 
 app = Flask(__name__)
 
-@app.route('/experiment')
+@app.route('/experiment', defaults={'path': ''})
 @app.route('/experiment/<path:path>')
-def index():
+def index(path):
     return render_template('index.html')
 
 @app.route('/save-data', methods=['POST'])
