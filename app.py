@@ -36,7 +36,7 @@ def save_data():
     with open(filename, 'a', encoding='utf-8') as f:
         f.write(json.dumps(record) + '\n')
 
-    audio_trials = [t for t in trials[-60:-1] if 'response' in t and t['response']]
+    audio_trials = [t for t in trials[-61:-2] if 'response' in t and t['response']]
     if audio_trials:
         os.makedirs('data/audio', exist_ok=True)
 
@@ -59,11 +59,11 @@ def finish():
     with open(filename, "r") as f:
         last_line = f.readlines()[-1]
         record = json.loads(last_line)
-    trial_data = record.get('trials', [])[-4:-1]
+    trial_data = record.get('trials', [])[-61:-2]
     rt_list = [trial.get('rt') for trial in trial_data if 'rt' in trial and trial['rt'] is not None]
     avg_rt = sum(rt_list)/len(rt_list) if rt_list else 0
     sd_rt = np.std(rt_list) if rt_list else 0
-    if avg_rt >= 1000 and sd_rt >= 10:  
+    if avg_rt >= 20000 and sd_rt >= 200:  
         url = "https://app.prolific.com/submissions/complete?cc=C11W147H"  
     else:
         url = "https://app.prolific.com/submissions/complete?cc=C1FBX2H7"

@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/@jspsych/plugin-audio-button-response@2.1.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
     <script src="https://unpkg.com/@jspsych/plugin-preload@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@2.1.0"></script>
     <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" /> 
   </head>
   <body>
@@ -56,6 +57,30 @@
             );
             
     var timeline = [];
+
+    var check_consent = function(elem) {
+    if (document.getElementById('1').checked 
+      && document.getElementById('2').checked
+      && document.getElementById('3').checked
+      && document.getElementById('4').checked
+      && document.getElementById('5').checked
+      && document.getElementById('6').checked) {
+        return true;
+    }
+    else {
+        alert("If you wish to participate, you must check all boxes to give your consent.");
+        return false;
+    }
+    return false;
+    };
+
+    var consent = {
+        type: jsPsychExternalHtml,
+        url: "external_page.html",
+        cont_btn: "start",
+        check_fn: check_consent
+    };
+    timeline.push(consent);
 
     var welcome = {
         type: jsPsychHtmlKeyboardResponse,
@@ -194,7 +219,9 @@
 
     var end = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: 'End of Experiment. Thank you for participating! Please hit ENTER to return to Prolific.',
+        stimulus: 'End of Experiment. Thank you for participating! <br><br>' + 
+                  'Please hit ENTER to return to Prolific <br><br>' +
+                  'This makes sure your participation is recorded.',
     };
     timeline.push(end);
 
