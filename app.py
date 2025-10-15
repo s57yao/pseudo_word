@@ -66,7 +66,7 @@ def finish():
     if avg_rt >= 20000 and sd_rt >= 200:  
         url = "https://app.prolific.com/submissions/complete?cc=C11W147H"  
     else:
-        url = "https://app.prolific.com/submissions/complete?cc=C1FBX2H7"
+        url = "https://app.prolific.com/submissions/complete?cc=CK3EXTCI"
     return jsonify({"url": url})
 
 if __name__ == '__main__':
