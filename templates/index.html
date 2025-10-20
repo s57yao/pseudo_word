@@ -16,7 +16,7 @@
   <body>
   </body>
   <script>
-    fetch("/static/wordlist_new.csv")
+    fetch("/static/wordlist_updated.csv")
     .then(response => response.text())
     .then(text => {
       let rows = text.trim().split("\n");
