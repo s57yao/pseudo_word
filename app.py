@@ -63,7 +63,7 @@ def finish():
     rt_list = [trial.get('rt') for trial in trial_data if 'rt' in trial and trial['rt'] is not None]
     avg_rt = sum(rt_list)/len(rt_list) if rt_list else 0
     sd_rt = np.std(rt_list) if rt_list else 0
-    if avg_rt >= 20000 and sd_rt >= 200:  
+    if avg_rt >= 2000 and sd_rt >= 200:  
         url = "https://app.prolific.com/submissions/complete?cc=C11W147H"  
     else:
         url = "https://app.prolific.com/submissions/complete?cc=CK3EXTCI"
