@@ -42,9 +42,14 @@ def save_data():
 
     for i, trial in enumerate(audio_trials):
         audio_base64 = trial['response']
-        subject_id = trial['subject_id']
-        study_id  = trial['study_id']
-        session_id = trial['session_id']
+        if 'subject_id' in trial:
+            subject_id = trial['subject_id']
+            study_id  = trial['study_id']
+            session_id = trial['session_id']
+        else:
+            subject_id = 'nobody'
+            study_id  = 'nobody'
+            session_id = 'nobody'
         word = re.sub('<[^<]+?>', '', trial['stimulus'])
         if ',' in audio_base64:
             audio_base64 = audio_base64.split(',')[1]
