@@ -42,12 +42,15 @@ def save_data():
 
     for i, trial in enumerate(audio_trials):
         audio_base64 = trial['response']
+        subject_id = trial['subject_id']
+        study_id  = trial['study_id']
+        session_id = trial['session_id']
         word = re.sub('<[^<]+?>', '', trial['stimulus'])
         if ',' in audio_base64:
             audio_base64 = audio_base64.split(',')[1]
         audio_bytes = base64.b64decode(audio_base64)
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        audio_filename = os.path.join('data/audio', f"{participant_id}_{word}_{timestamp}.webm")
+        audio_filename = os.path.join('data/audio', f"{subject_id}_{word}_{timestamp}_{study_id}_{session_id}.webm")
         with open(audio_filename, 'wb') as audio_file:
             audio_file.write(audio_bytes)
     
